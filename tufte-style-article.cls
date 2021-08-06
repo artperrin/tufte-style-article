@@ -121,6 +121,8 @@
 \newif\if@french \@frenchfalse
 \DeclareOption{french}{\@frenchtrue}
 \DeclareOption{english}{\@frenchfalse}
+\newif\if@tocignoresection \@tocignoresectionfalse
+\DeclareOption{tocignoresection}{\@tocignoresectiontrue}
 \ExecuteOptions{english}
 \ExecuteOptions{black}
 \ProcessOptions\relax
@@ -430,17 +432,21 @@
 
 %	T O C  C U S T O M I Z A T I O N
 %
+\makeatletter
 \contentsmargin[1cm]{0cm}
-\titlecontents{section}[0em]
-	{\large\vspace{16pt}}
-	{\makebox[-1em][r]{\color{darker_gray}\bfseries\large\thecontentslabel}\large\hspace{1em}}
-	{\large}
-	{~~~~{\color{main_accent}\contentspage}}[\vskip 0pt]
-% \titlecontents{subsection}[0em]
-% 	{\vspace{4pt}}
-% 	{\normalfont\thecontentslabel\enspace\itshape}
-% 	{\itshape}
-% 	{\qquad\contentspage}[\vskip 0pt]
+\if@tocignoresection
+	\titlecontents{section}[0em]
+		{\large\vspace{16pt}}
+		{\makebox[-1em][r]{\color{darker_gray}\bfseries\large\thecontentslabel}\large\hspace{1em}} % remove the page number next to the section's name to avoid redundancy
+		{}
+		{}
+\else
+	\titlecontents{section}[0em]
+		{\large\vspace{16pt}}
+		{\makebox[-1em][r]{\color{darker_gray}\bfseries\large\thecontentslabel}\large\hspace{1em}} % remove the page number next to the section's name to avoid redundancy
+		{\large}
+		{~~~~{\color{main_accent}\contentspage}}[\vskip 0pt]
+\fi
 \titlecontents*{subsection}
 	[0em]
 	{}
@@ -448,12 +454,8 @@
 	{\color{darker_gray}\itshape}
 	{~~{\color{main_accent}\contentspage}}
 	[\qquad]
-% \titlecontents{subsubsection}[1em]
-% 	{\vspace{0pt}}
-% 	{\normalfont\thecontentslabel\enspace\itshape}
-% 	{\itshape}
-% 	{\quad\quad\contentspage}[\vskip 0pt]
 \pretocmd{\contentsname}{}{}{}
+\makeatother
 
 %	toc offset
 \let\oldtoc\tableofcontents

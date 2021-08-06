@@ -11,10 +11,11 @@
 
 \documentclass[
 	a4paper,
-	% raggedright,
+	raggedright,
 	% twoside,
 	12pt,
 	colorful,
+	tocignoresection,
 ]{tufte-style-article}
 
 \setcounter{secnumdepth}{1}
@@ -25,7 +26,7 @@
 \datestart{the beginning}
 \dateend{the end}
 \internship{Documentation}
-\incharge{Brisco \textsc{County} (Jr.) \\ Harry \textsc{Dunn}}
+\incharge{Brisco \textsc{County} Jr. \\ Harry \textsc{Dunn}}
 \student{John \textsc{Doe}}
 
 \begin{document}
@@ -46,10 +47,12 @@ Well, the cover page! A few commands are used to build it:
 
 Three icons are displayed: two at the top, one at the bottom. These icons are to be placed in the \texttt{chart} folder with the right names (or the paths must be changed directly in the \texttt{.cls} file). Finally, to translate the cover page in french, add \texttt{french} to the class options.
 
+Another detail is changed: the page numbers next to each section's name in the table of content can be removed to avoid redundancy with the subsection's pages above. Note that if a section does not have any subsection, no page numbers will be displayed --- the hyperref still works for them though. To enable this, use the option \texttt{tocignoresection}.\\
+
 In addition, this new class provides some shortcuts and new environments:
 \begin{itemize}
 	\item latin expression \infine with \inlinecode{latex}{\infine},
-	\item maths notations such as displaystyle parenthesis with \inlinecode{latex}{\parent{<expression>}}, \textbf{bold} instead of $\overrightarrow{\mathrm{arrowed}}$ vectors\sidenote{respecting the \href{https://en.wikipedia.org/wiki/Vector_notation}{common typographic convention.}} with \inlinecode{latex}{\vec{<epxression>}} and \inlinecode{latex}{\tilde{}}-style prime with \inlinecode{latex}{\prim{<expression>}},
+	\item maths notations such as displaystyle parenthesis with \inlinecode{latex}{\parent{<expression>}}, \textbf{bold} instead of $\overrightarrow{\mathrm{arrowed}}$ vectors\sidenote{respecting the \href{https://en.wikipedia.org/wiki/Vector_notation}{common typographic convention}.} with \inlinecode{latex}{\vec{<epxression>}} and \inlinecode{latex}{\tilde{}}-style prime with \inlinecode{latex}{\prim{<expression>}},
 	\item new \texttt{equation} and \texttt{system} environments with \inlinecode{latex}{\begin{eq}} and \inlinecode{latex}{\begin{system}} to \textbf{count them separately}, for example with~\ref{eq:one}, ~\ref{eq:two} and ~\ref{sys:one}.
 \end{itemize}
 
@@ -68,7 +71,7 @@ In addition, this new class provides some shortcuts and new environments:
 
 If one does not want an equation or a system to be numbered, one just have to add a star * after the environment's name.
 
-\paragraph{Known issues:} the way to display icons on the cover page is not optimal, the user will probably have to manually tune the \inlinecode{latex}{\includegraphics} settings.
+\paragraph{Known issue:} the way to display icons on the cover page is not optimal, the user will probably have to manually tune the \inlinecode{latex}{\includegraphics} settings.
 
 \clearpage
 
