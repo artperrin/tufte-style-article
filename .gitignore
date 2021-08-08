@@ -10,5 +10,4 @@
 *.toc
 *.log
 
-_minted-documentation/*
-_minted-minimal/*
+_minted-*

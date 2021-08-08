@@ -12,26 +12,71 @@
 \documentclass[
 	a4paper,
 	raggedright,
-	twoside,
+	% twoside,
 	12pt,
 	colorful,
+	tocignoresection,
 ]{tufte-style-article}
 
-\usepackage{lipsum}	% for blind texts generation
-\usepackage{hologo}	% for special logos such as MiKTeX
-\usepackage{xurl}	% to make urls break lines
 \setcounter{secnumdepth}{1}
 
-\title{The \texttt{tufte-style-article} class}
-\author{Sylvain Kern}
+\school{Fake school}
+\institution{Fake institution}
+\course{\texttt{tufte-style-article} for internship reports}
+\datestart{the beginning}
+\dateend{the end}
+\internship{Documentation}
+\incharge{Brisco \textsc{County} Jr. \\ Harry \textsc{Dunn}}
+\student{John \textsc{Doe}}
 
 \begin{document}
 
-\maketitle
+\coverpage
 
-\vskip -25pt
-\noindent\hspace{.1\textwidth}\url{https://github.com/sylvain-kern/tufte-style-article}
-\vskip 25pt
+\section*{What's new compared to \texttt{tufte-style-article}?}
+\addcontentsline{toc}{section}{What's new?}
+
+Well, the cover page! A few commands are used to build it:
+\begin{itemize}
+	\item the \inlinecode{latex}{\school} and \inlinecode{latex}{\institution} commands to inform in which school the student is studying and in which institution he works as intern,
+	\item the \inlinecode{latex}{\course} command to inform which course the internship is linked to,
+	\item the \inlinecode{latex}{\datestart} and \inlinecode{latex}{\dateend} commands to inform the starting and ending dates of the internship,
+	\item the \inlinecode{latex}{\incharge} command to inform who are the people in charge of the internship,
+	\item the \inlinecode{latex}{\student} command to inform who the intern is.
+\end{itemize}
+
+Three icons are displayed: two at the top, one at the bottom. These icons are to be placed in the \texttt{chart} folder with the right names (or the paths must be changed directly in the \texttt{.cls} file). Finally, to translate the cover page in french, add \texttt{french} to the class options.
+
+Another detail is changed: the page numbers next to each section's name in the table of content can be removed to avoid redundancy with the subsection's pages above. Note that if a section does not have any subsection, no page numbers will be displayed --- the hyperref still works for them though. To enable this, use the option \texttt{tocignoresection}.\\
+
+In addition, this new class provides some shortcuts and new environments:
+\begin{itemize}
+	\item latin expression \infine with \inlinecode{latex}{\infine},
+	\item maths notations such as displaystyle parenthesis with \inlinecode{latex}{\parent{<expression>}}, \textbf{bold} instead of $\overrightarrow{\mathrm{arrowed}}$ vectors\sidenote{respecting the \href{https://en.wikipedia.org/wiki/Vector_notation}{common typographic convention}.} with \inlinecode{latex}{\vec{<epxression>}} and \inlinecode{latex}{\tilde{}}-style prime with \inlinecode{latex}{\prim{<expression>}},
+	\item new \texttt{equation} and \texttt{system} environments with \inlinecode{latex}{\begin{eq}} and \inlinecode{latex}{\begin{system}} to \textbf{count them separately}, for example with~\ref{eq:one}, ~\ref{eq:two} and ~\ref{sys:one}.
+\end{itemize}
+
+\begin{eq}{one}
+	L\parent{\theta \vert x_1, \cdots , x_n} = \prod_{i=1}^n L\parent{\theta \vert x_i} \; , 
+\end{eq}
+
+\begin{system}{one}
+	\vec{\nabla} \cdot \vec{B} &= 0 \; , \\
+	\vec{\nabla} \cdot \vec{D} &= \rho \ , \\
+\end{system}
+
+\begin{eq}{two}
+	E = \vec{F} \parent{\vec{x}_2 - \vec{x}_1} \; . 
+\end{eq}
+
+If one does not want an equation or a system to be numbered, one just have to add a star * after the environment's name.
+
+\paragraph{Known issue:} the way to display icons on the cover page is not optimal, the user will probably have to manually tune the \inlinecode{latex}{\includegraphics} settings.
+
+\clearpage
+
+\section*{Introduction}
+\addcontentsline{toc}{section}{Introduction}
 
 \noindent
 \texttt{tufte-style-article}\sidetext{Edward Tufte is a statistician, computer scientist and professor at Yale University. His personal website: \url{www.edwardtufte.com}} is a \LaTeX{} class with a design similar to Edward Tufte's works. His designs are known for their simplicty, legibleness, extensive use of sidenotes in a wide dedicated margin and tight text and graphic integration. This class is however not a rigourous copy of E.Tufte's works, it is more of an inspiration. It also includes design features from \textit{The Elements of Typographic Style}.\sidenote{\textls{\scshape robert bringhurst}, \textit{The Elements of Typographic Style}, 1999.}
@@ -46,7 +91,6 @@ Before I dive into the details, I want to thank the members of\\\noindent \href{
 \tableofcontents
 \newpage
 
-
 \section{Installation}
 
 This class' source file is \texttt{tufte-style-article.cls}, available on the following repository:
@@ -60,11 +104,11 @@ In order to make the code environments\sidenote{See section \ref{sub:code}.} and
 pip install pygments
 \end{codebox}
 
-\subsection{\hologo{MiKTeX} users on Windows}
+\subsection{MiKTeX users on Windows}
 
 \begin{enumerate}
 
-\item Create a \texttt{localtexmf}\sidenote{More on \texttt{texmf} and how to install custom classes and packages on \hologo{MiKTeX} here:\\\url{https://tex.stackexchange.com/questions/10498/installing-a-class}.} directory if you do not already have one, for instance
+\item Create a \texttt{localtexmf}\sidenote{More on \texttt{texmf} and how to install custom classes and packages on MiKTeX \href{https://tex.stackexchange.com/questions/10498/installing-a-class}{here}} directory if you do not already have one, for instance
 \begin{codebox}{text}
 C:\Users\<you>\localtexmf
 \end{codebox}
@@ -76,7 +120,7 @@ C:\Users\<you>\localtexmf
 C:\Users\<you>\localtexmf\tex\latex\tufte-style-article\tufte-style-article.cls
 \end{codebox}
 
-\item Open \hologo{MiKTeX} console, go to \inlinecode{text}{Settings}, \inlinecode{latex}{Directories} tab. Click on \inlinecode{text}{add}, and enter yout \texttt{texmf} path.
+\item Open MiKTeX console, go to \inlinecode{text}{Settings}, \inlinecode{latex}{Directories} tab. Click on \inlinecode{text}{add}, and enter yout \texttt{texmf} path.
 \begin{codebox}{text}
 C:\Users\<you>\localtexmf
 \end{codebox}
@@ -85,14 +129,14 @@ C:\Users\<you>\localtexmf
 
 \end{enumerate}
 
-\texttt{tufte-style-article} is now installed on your system ! \hologo{MiKTeX} will recognize and find the class file without it having to be in your project folder.
+\texttt{tufte-style-article} is now installed on your system ! MiKTeX will recognize and find the class file without it having to be in your project folder.
 
 \newpage
 \subsection{\TeX{} Live users on Linux}
 
 \begin{enumerate}
 
-\item Create a \texttt{localtexmf}\sidenote{More on \texttt{texmf} and how to install custom classes and packages on \TeX{} Live here:\\\url{https://tex.stackexchange.com/questions/96976/install-custom-cls-using-tex-live-in-local-directory}.} directory if you do not already have one, for instance
+\item Create a \texttt{localtexmf}\sidenote{More on \texttt{texmf} and how to install custom classes and packages on \TeX{} Live \href{https://tex.stackexchange.com/questions/96976/install-custom-cls-using-tex-live-in-local-directory}{here}} directory if you do not already have one, for instance
 \begin{codebox}{bash}
 $HOME/.texmf
 \end{codebox}
@@ -530,7 +574,7 @@ mb2_tag_t* mb2_find_tag(mb2_t* boot, uint32_t tag_type) {
 
 \subsection{Compilation}
 
-This class compiles with \texttt{pdflatex}. I tested it with \hologo{MiKTeX} on Windows, \TeX-live on Linux and Overleaf. If you use code boxes or snippets, make sure you compile with the \texttt{--shell-escape} flag. Eventually, the following compilation line should work everywhere.
+This class compiles with \texttt{pdflatex}. I tested it with MiKTeX on Windows, \TeX-live on Linux and Overleaf. If you use code boxes or snippets, make sure you compile with the \texttt{--shell-escape} flag. Eventually, the following compilation line should work everywhere.
 \begin{codebox}{text}
 pdflatex --shell-escape yourdocument.tex
 \end{codebox}

@@ -1,9 +1,9 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{tufte-style-article}[]
+\ProvidesClass{tufte-style-article}[Personalised]
 
 %  _________  ___  ___  ________ _________  _______
 % |\___   ___\\  \|\  \|\  _____\\___   ___\\  ___ \
-% \|___ \  \_\ \  \\\  \ \  \__/\|___ \  \_\ \   __/|    ____________
+% \|___ \  \_\ \  \\\  \ \  \__/\|___ \  \_\ \   __/|   ____________
 %      \ \  \ \ \  \\\  \ \   __\    \ \  \ \ \  \_|/__|\____________\
 %       \ \  \ \ \  \\\  \ \  \_|     \ \  \ \ \  \_|\ \|____________|
 %        \ \__\ \ \_______\ \__\       \ \__\ \ \_______\
@@ -11,7 +11,7 @@
 
 %  ________  _________    ___    ___ ___       _______
 % |\   ____\|\___   ___\ |\  \  /  /|\  \     |\  ___ \
-% \ \  \___|\|___ \  \_| \ \  \/  / | \  \    \ \   __/|    ____________
+% \ \  \___|\|___ \  \_| \ \  \/  / | \  \    \ \   __/|   ____________
 %  \ \_____  \   \ \  \   \ \    / / \ \  \    \ \  \_|/__|\____________\
 %   \|____|\  \   \ \  \   \/  /  /   \ \  \____\ \  \_|\ \|____________|
 %     ____\_\  \   \ \__\__/  / /      \ \_______\ \_______\
@@ -118,6 +118,12 @@
 		}
 	}
 }
+\newif\if@french \@frenchfalse
+\DeclareOption{french}{\@frenchtrue}
+\DeclareOption{english}{\@frenchfalse}
+\newif\if@tocignoresection \@tocignoresectionfalse
+\DeclareOption{tocignoresection}{\@tocignoresectiontrue}
+\ExecuteOptions{english}
 \ExecuteOptions{black}
 \ProcessOptions\relax
 \LoadClassWithOptions{article}
@@ -167,15 +173,11 @@
 \RequirePackage{tabularx}		% adaptive columns on tables
 \RequirePackage{booktabs}		% better looking tables
 \RequirePackage{enumitem}		% better looking lists
-\RequirePackage[
-	super,
-	square
-]{natbib}						% customize \cite{}
 \RequirePackage[hidelinks]{hyperref}	% automatic references in pdf
 \RequirePackage{etoolbox}		% really idk what this does
 \RequirePackage{verbatim}   	% for verbatim environments
 \RequirePackage[export]{adjustbox}
-\RequirePackage[strict]{changepage}	% needed by sidenotes
+\RequirePackage[strict]{changepage}
 
 
 %	C O L O R  D E F I N I T I O N
@@ -260,7 +262,7 @@
 \makeatletter
 \RenewDocumentCommand\sidenotetext{ o o +m }{%
     \IfNoValueOrEmptyTF{#1}{%
-        \@sidenotes@placemarginal{#2}{\noindent\footnotesize\RaggedRight{\thesidenote{}}~~\color{darker_gray} #3}%
+		\@sidenotes@placemarginal{#2}{\noindent\footnotesize\RaggedRight{\thesidenote{}}~~\color{darker_gray} #3}%
         \refstepcounter{sidenote}%
     }{%
         \@sidenotes@placemarginal{#2}{\textsuperscript{#1}~#3}%
@@ -277,7 +279,6 @@
 {
 \end{fullwidth}
 }
-
 
 %	P A G E  H E A D E R S
 %
@@ -324,26 +325,6 @@
 	\\\smallskip%
 }
 
-%	M A K E T I T L E
-%
-\makeatletter
-\newcommand\@maketitlebis{%
-	\hfill
-	\begin{minipage}{0.9\textwidth}
-		\vskip -40pt
-		\let\footnote\thanks
-		{\LARGE\raggedright \@title \par }
-		\vskip 10pt
-		{\color{darker_gray}\Large \itshape \@author \hfill \normalsize \@date}
-		\vskip 60pt~
-	\end{minipage}
-}
-\renewcommand\maketitle{
-\@maketitlebis
-\thispagestyle{empty}
-}
-\makeatother
-
 %	F I G U R E S  A N D  S T U F F
 %
 % 	caption formatting
@@ -357,6 +338,7 @@
 	font={footnotesize, color=darker_gray},
 	singlelinecheck=off,
 }
+
 \DeclareCaptionStyle{sidecaption}{
     labelfont = {bf, color=main_accent},
 	%labelformat = lc,
@@ -398,20 +380,8 @@
 	singlelinecheck=off,
 }
 
-%	figures
-
 %	figure macros
 \AtBeginDocument{\usepackage[export]{adjustbox}}
-% \newcommand{\textfig}[4][]{%
-% 	\medskip%
-% 	\marginpar{%
-% 		\vskip 8pt%
-% 		\captionof{figure}{#3}%
-% 		\label{#4}%
-% 	}\nopagebreak%
-% 	\noindent\includegraphics[width=#1\textwidth, outer]{#2}%
-% 	\medskip%
-% }
 \newcommand{\textfig}[4][]{%
 	\begin{figure}[!htb]%
 		\sidecaption{#3\label{#4}}%
@@ -462,17 +432,21 @@
 
 %	T O C  C U S T O M I Z A T I O N
 %
+\makeatletter
 \contentsmargin[1cm]{0cm}
-\titlecontents{section}[0em]
-	{\large\vspace{16pt}}
-	{\makebox[-1em][r]{\color{darker_gray}\bfseries\large\thecontentslabel}\large\hspace{1em}}
-	{\large}
-	{~~~~{\color{main_accent}\contentspage}}[\vskip 0pt]
-% \titlecontents{subsection}[0em]
-% 	{\vspace{4pt}}
-% 	{\normalfont\thecontentslabel\enspace\itshape}
-% 	{\itshape}
-% 	{\qquad\contentspage}[\vskip 0pt]
+\if@tocignoresection
+	\titlecontents{section}[0em]
+		{\large\vspace{16pt}}
+		{\makebox[-1em][r]{\color{darker_gray}\bfseries\large\thecontentslabel}\large\hspace{1em}} % remove the page number next to the section's name to avoid redundancy
+		{}
+		{}
+\else
+	\titlecontents{section}[0em]
+		{\large\vspace{16pt}}
+		{\makebox[-1em][r]{\color{darker_gray}\bfseries\large\thecontentslabel}\large\hspace{1em}} % remove the page number next to the section's name to avoid redundancy
+		{\large}
+		{~~~~{\color{main_accent}\contentspage}}[\vskip 0pt]
+\fi
 \titlecontents*{subsection}
 	[0em]
 	{}
@@ -480,12 +454,8 @@
 	{\color{darker_gray}\itshape}
 	{~~{\color{main_accent}\contentspage}}
 	[\qquad]
-% \titlecontents{subsubsection}[1em]
-% 	{\vspace{0pt}}
-% 	{\normalfont\thecontentslabel\enspace\itshape}
-% 	{\itshape}
-% 	{\quad\quad\contentspage}[\vskip 0pt]
 \pretocmd{\contentsname}{}{}{}
+\makeatother
 
 %	toc offset
 \let\oldtoc\tableofcontents
@@ -696,22 +666,125 @@
   {\par\xdef\tpd{\the\prevdepth}\egroup
    \prevdepth=\tpd}
 
-%	M A T H  &  P H Y S I C S
-%	S H O R T C U T S
-%\iffalse
-% uncomment this \iffalse
-%and the \fi at the end to disable (or delete)
+% ---- Personnal ---- %
 
-% i find it more pleasing
-\renewcommand{\phi}{\varphi}
-\renewcommand{\epsilon}{\varepsilon}
-\newcommand{\N}{\mathbb{N}}     % shortcuts for usual number sets
-\newcommand{\Z}{\mathbb{Z}}
-\newcommand{\Q}{\mathbb{Q}}
-\newcommand{\R}{\mathbb{R}}
-\newcommand{\C}{\mathbb{C}}
-% powers of 10
-\newcommand{\ee}[1]{\cdot 10^{#1}}
-% new vect with overrightarrow style
-\newcommand{\vect}[1]{\:\overrightarrow{#1}}
-%fi
+\newcommand{\school}[1]{\renewcommand{\school}{#1}}
+\newcommand{\institution}[1]{\renewcommand{\institution}{#1}}
+\newcommand{\course}[1]{\renewcommand{\course}{#1}}
+\newcommand{\datestart}[1]{\renewcommand{\datestart}{#1}}
+\newcommand{\dateend}[1]{\renewcommand{\dateend}{#1}}
+\newcommand{\internship}[1]{\renewcommand{\internship}{#1}}
+\newcommand{\incharge}[1]{\renewcommand{\incharge}{#1}}
+\newcommand{\student}[1]{\renewcommand{\student}{#1}}
+
+% cover
+\makeatletter
+\newcommand{\coverpage}{
+    \newgeometry{left=2.5cm, right=2.5cm, top=2cm, bottom=2cm}
+    \begin{titlepage}
+        \centering
+        % display school logo
+        \begin{minipage}{.49\textwidth}
+            \begin{flushleft}
+                \centering
+                \includegraphics[width=.6\textwidth]{chart/top_left.png} % TOP LEFT LOGO
+            \end{flushleft}
+        \end{minipage}
+        % display company logo
+        \begin{minipage}{.49\textwidth}
+            \begin{flushright}
+                \centering
+                \includegraphics[width=.6\textwidth]{chart/top_right.png} % TOP RIGHT LOGO
+            \end{flushright}
+        \end{minipage}
+        % main text section
+        \par\vspace{1cm}
+        {\scshape\LARGE \color{main_accent}\school \\ \institution \par}
+        \vspace{1.5cm}%
+		\if@french%
+			{\scshape\Large \course \\ \normalsize du \datestart~au \dateend \\ \Large Rapport \par}%
+		\else%
+        	{\scshape\Large \course \\ \normalsize from \datestart~to \dateend \\ \Large Report \par}%
+		\fi%
+        \vspace{1cm}
+        \rule{\linewidth}{.2mm} \\[.4cm]
+        {\huge\bfseries \internship \par} \
+        \rule{\linewidth}{.2mm} \\[1.5cm]
+        \vspace{1cm}
+        % assignments section
+        \begin{minipage}[t]{.4\textwidth} % left section
+            \begin{flushleft} \large
+				\if@french
+					\emph{\color{lighter_accent}\textbf{Élève :}}\\
+				\else
+					\emph{\color{lighter_accent}\textbf{Student:}}\\
+				\fi
+				\student
+            \end{flushleft}
+		\end{minipage}
+		\begin{minipage}[t]{.5\textwidth} % right section
+            \begin{flushright} \large
+				\if@french
+					\emph{\color{lighter_accent}\textbf{Responsables :}}\\
+				\else
+					\emph{\color{lighter_accent}\textbf{In charge:}}\\
+				\fi
+				\incharge
+            \end{flushright}
+        \end{minipage}
+        \includegraphics[height=4cm]{chart/bottom.png} % BOTTOM LOGO
+        \vfill
+        {\large \today\par} % date display
+	\end{titlepage}
+	\restoregeometry\clearpage
+	\newpage
+}
+\makeatother
+% ------------ Shortcuts ------------ %
+
+\newcommand{\infine}{\textit{in fine~}} % shortcut for 'in fine' locution
+\newcommand{\parent}[1]{\left(#1 \right)} % shortcut for parentheses
+\renewcommand{\vec}[1]{\ensuremath{\mathbf{#1}}} % shortcut for bold vectors notation
+\newcommand{\prim}[1]{\ensuremath{#1^\prime}} % shortcut for prim notation
+
+% ------------ Environments ------------ %
+
+\newcounter{NbSystems}
+\newenvironment{system}[1]{
+    \refstepcounter{NbSystems}
+    \renewcommand{\theequation}{S.\thesection-\arabic{NbSystems}}
+    \begin{equation}\label{sys:#1}
+        \begin{cases}
+            \strut
+    }
+    {
+        \end{cases}
+    \end{equation}
+}
+
+\newenvironment{system*}{
+    \begin{equation*}
+        \begin{cases}
+            \strut
+    }
+    {
+        \end{cases}
+    \end{equation*}
+}
+
+\newcounter{NbEqs}
+\newenvironment{eq}[1]{
+    \refstepcounter{NbEqs}
+    \renewcommand{\theequation}{Eq.\thesection-\arabic{NbEqs}}
+    \begin{equation}\label{eq:#1}
+    }
+    {
+    \end{equation}
+}
+
+\newenvironment{eq*}{
+    \begin{equation*}
+    }
+    {
+    \end{equation*}
+}
